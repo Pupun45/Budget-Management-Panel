@@ -1,14 +1,15 @@
 // src/components/ExpenseForm.jsx
 import { useState, useEffect, useRef } from 'react';
-import { getTodayString } from '../utils/helpers';
+import { getTodayString, getMonthKey } from '../utils/helpers';
 
 const EMPTY_FORM = {
   name: '',
   price: '',
   date: '',
+  planId: '',
 };
 
-export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditCancel, isOpen, onClose }) {
+export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditCancel, isOpen, onClose, budgetPlans = [] }) {
   const [form, setForm] = useState({ ...EMPTY_FORM, date: getTodayString() });
   const [errors, setErrors] = useState({});
   const firstInputRef = useRef(null);
@@ -21,6 +22,7 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
         name: editingExpense.name || '',
         price: editingExpense.price !== undefined ? String(editingExpense.price) : '',
         date: editingExpense.date || getTodayString(),
+        planId: editingExpense.planId || '',
       });
       setErrors({});
     } else {
@@ -70,11 +72,14 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
       return;
     }
 
+    const selectedPlan = (budgetPlans || []).find(p => p.id === form.planId);
     const expenseData = {
       name: form.name.trim(),
       price: Number(form.price),
       date: form.date,
       note: '',
+      planId: form.planId || '',
+      planName: selectedPlan ? selectedPlan.name : '',
     };
 
     if (isEditing) {
@@ -98,6 +103,11 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
   function handleOverlayClick(e) {
     if (e.target === e.currentTarget) handleCancel();
   }
+
+  // Filter budget plans for the selected date's month
+  const selectedMonthKey = form.date ? getMonthKey(form.date) : '';
+  const monthPlans = (budgetPlans || []).filter(p => !p.monthKey || p.monthKey === selectedMonthKey);
+  const otherPlans = (budgetPlans || []).filter(p => p.monthKey && p.monthKey !== selectedMonthKey);
 
   if (!isOpen && !isEditing) return null;
 
@@ -204,6 +214,37 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
                 />
                 {errors.date && <span className="field-error">{errors.date}</span>}
               </div>
+            </div>
+
+            {/* Row 3: Plan Name Dropdown */}
+            <div className="form-group" style={{ marginTop: '12px' }}>
+              <label className="form-label" htmlFor="expense-plan">
+                Plan Name (Target Budget)
+              </label>
+              <select
+                id="expense-plan"
+                name="planId"
+                className="form-control"
+                value={form.planId}
+                onChange={handleChange}
+                style={{ cursor: 'pointer', height: '42px' }}
+              >
+                <option value="">-- Select Budget Plan (Optional) --</option>
+                {monthPlans.map(plan => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.name} (Budget: ₹{Number(plan.targetBudget || 0).toLocaleString('en-IN')})
+                  </option>
+                ))}
+                {otherPlans.length > 0 && (
+                  <optgroup label="Other Months">
+                    {otherPlans.map(plan => (
+                      <option key={plan.id} value={plan.id}>
+                        {plan.name} ({plan.monthKey})
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+              </select>
             </div>
 
           </div>

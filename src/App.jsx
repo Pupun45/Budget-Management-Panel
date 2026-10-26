@@ -8,9 +8,11 @@ import SummaryCards from './components/SummaryCards';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseTable from './components/ExpenseTable';
 import MonthlyHistory from './components/MonthlyHistory';
+import TargetBudgetPanel from './components/TargetBudgetPanel';
 import Toast from './components/Toast';
 
 import { useExpenses } from './hooks/useExpenses';
+import { useBudgetPlans } from './hooks/useBudgetPlans';
 import { getCurrentMonthKey } from './utils/helpers';
 
 let toastIdCounter = 0;
@@ -44,13 +46,23 @@ export default function App() {
     dbStatus,
   } = useExpenses();
 
+  const budgetHook = useBudgetPlans();
   const { toasts, addToast } = useToast();
   const currentMonthKey = getCurrentMonthKey();
 
   // ---------- Handlers ----------
 
-  function handleAdd(expenseData) {
-    addExpense(expenseData);
+  async function handleAdd(expenseData) {
+    const saved = await addExpense(expenseData);
+    if (expenseData.planId) {
+      budgetHook.addExpenseToPlan(expenseData.planId, {
+        id: saved?.id,
+        name: expenseData.name,
+        price: expenseData.price,
+        date: expenseData.date,
+        note: expenseData.note || '',
+      });
+    }
     addToast('Expense added successfully!', 'success');
   }
 
@@ -64,6 +76,15 @@ export default function App() {
 
   function handleEditSave(id, originalMonthKey, updatedData) {
     editExpense(id, originalMonthKey, updatedData);
+    if (updatedData.planId) {
+      budgetHook.addExpenseToPlan(updatedData.planId, {
+        id,
+        name: updatedData.name,
+        price: updatedData.price,
+        date: updatedData.date,
+        note: updatedData.note || '',
+      });
+    }
     setEditingExpense(null);
     setIsFormOpen(false);
     addToast('Expense updated successfully!', 'success');
@@ -75,6 +96,10 @@ export default function App() {
   }
 
   function handleDelete(id, monthKey) {
+    const expenseToDelete = (allExpenses[monthKey] || []).find(e => e.id === id);
+    if (expenseToDelete && expenseToDelete.planId) {
+      budgetHook.deleteExpenseFromPlan(expenseToDelete.planId, id);
+    }
     deleteExpense(id, monthKey);
     addToast('Expense deleted.', 'danger');
   }
@@ -127,7 +152,15 @@ export default function App() {
               editingExpense={editingExpense}
               onEditSave={handleEditSave}
               onEditCancel={handleEditCancel}
+              budgetPlans={budgetHook.allPlans}
             />
+          </div>
+        )}
+
+        {/* ---- Target Budget Tab ---- */}
+        {activeTab === 'target-budget' && (
+          <div id="panel-target-budget" role="tabpanel" aria-labelledby="tab-target-budget">
+            <TargetBudgetPanel addToast={addToast} budgetHook={budgetHook} />
           </div>
         )}
 

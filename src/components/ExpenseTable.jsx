@@ -151,7 +151,14 @@ export default function ExpenseTable({ expenses, onEdit, onDelete, monthKey, isF
                     <tr key={expense.id}>
                       <td className="text-muted">{idx + 1}</td>
                       <td>
-                        <div className="product-name">{expense.name}</div>
+                        <div className="product-name">
+                          {expense.name}
+                          {expense.planName && (
+                            <span className="expense-plan-tag">
+                              🎯 {expense.planName}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="right price-cell">
                         {formatINR(expense.price)}

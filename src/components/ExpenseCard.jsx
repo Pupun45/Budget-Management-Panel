@@ -7,6 +7,11 @@ export default function ExpenseCard({ expense, onEdit, onDelete }) {
       <div className="expense-card-top">
         <div>
           <div className="expense-card-name">{expense.name}</div>
+          {expense.planName && (
+            <span className="expense-plan-tag">
+              🎯 {expense.planName}
+            </span>
+          )}
         </div>
         <div className="expense-card-price">{formatINR(expense.price)}</div>
       </div>
