@@ -18,7 +18,7 @@ export default function Header({ dbStatus = 'connected' }) {
             </svg>
           </div>
           <div className="header-text">
-            <h1>Monthly Budget Panel</h1>
+            <h1>Budget Panel</h1>
             <p>{formatMonthLabel(getCurrentMonthKey())}</p>
           </div>
         </div>
