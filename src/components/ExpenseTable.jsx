@@ -1,7 +1,6 @@
 // src/components/ExpenseTable.jsx
 import { useState } from 'react';
 import { formatINR, formatDateDisplay, getCurrentMonthKey } from '../utils/helpers';
-import CategoryBadge from './CategoryBadge';
 import ExpenseCard from './ExpenseCard';
 
 function EmptyState() {
@@ -100,9 +99,6 @@ export default function ExpenseTable({ expenses, onEdit, onDelete, monthKey, isF
               </svg>
               Expense List
             </span>
-            {expenses.length > 0 && (
-              <span className="expense-count-badge">{expenses.length} {expenses.length === 1 ? 'item' : 'items'}</span>
-            )}
           </div>
 
           {onToggleForm && (
@@ -145,7 +141,6 @@ export default function ExpenseTable({ expenses, onEdit, onDelete, monthKey, isF
                   <tr>
                     <th>#</th>
                     <th>Product</th>
-                    <th>Category</th>
                     <th className="right">Price</th>
                     <th>Date</th>
                     <th className="right">Actions</th>
@@ -157,9 +152,6 @@ export default function ExpenseTable({ expenses, onEdit, onDelete, monthKey, isF
                       <td className="text-muted">{idx + 1}</td>
                       <td>
                         <div className="product-name">{expense.name}</div>
-                      </td>
-                      <td>
-                        <CategoryBadge category={expense.category} />
                       </td>
                       <td className="right price-cell">
                         {formatINR(expense.price)}

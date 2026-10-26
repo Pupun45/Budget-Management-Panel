@@ -4,7 +4,6 @@ import { getTodayString } from '../utils/helpers';
 
 const EMPTY_FORM = {
   name: '',
-  category: '',
   price: '',
   date: '',
 };
@@ -20,7 +19,6 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
     if (editingExpense) {
       setForm({
         name: editingExpense.name || '',
-        category: editingExpense.category || '',
         price: editingExpense.price !== undefined ? String(editingExpense.price) : '',
         date: editingExpense.date || getTodayString(),
       });
@@ -52,7 +50,6 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
   function validate() {
     const errs = {};
     if (!form.name.trim()) errs.name = 'Product name is required.';
-    if (!form.category.trim()) errs.category = 'Category is required.';
     if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0)
       errs.price = 'Enter a valid positive price.';
     if (!form.date) errs.date = 'Please select a date.';
@@ -75,7 +72,6 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
 
     const expenseData = {
       name: form.name.trim(),
-      category: form.category.trim(),
       price: Number(form.price),
       date: form.date,
       note: '',
@@ -154,44 +150,24 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
         <form onSubmit={handleSubmit} noValidate id="expense-form">
           <div className="expense-modal-body">
 
-            {/* Row 1: Name + Category */}
-            <div className="modal-form-row">
-              <div className="form-group">
-                <label className="form-label" htmlFor="expense-name">
-                  Product / Expense Name <span className="required">*</span>
-                </label>
-                <input
-                  id="expense-name"
-                  ref={firstInputRef}
-                  type="text"
-                  name="name"
-                  className={`form-control${errors.name ? ' error' : ''}`}
-                  placeholder="e.g. Groceries, Petrol…"
-                  value={form.name}
-                  onChange={handleChange}
-                  autoComplete="off"
-                  maxLength={100}
-                />
-                {errors.name && <span className="field-error">{errors.name}</span>}
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" htmlFor="expense-category">
-                  Category <span className="required">*</span>
-                </label>
-                <input
-                  id="expense-category"
-                  type="text"
-                  name="category"
-                  className={`form-control${errors.category ? ' error' : ''}`}
-                  placeholder="e.g. Food, Transport, Bills…"
-                  value={form.category}
-                  onChange={handleChange}
-                  autoComplete="off"
-                  maxLength={50}
-                />
-                {errors.category && <span className="field-error">{errors.category}</span>}
-              </div>
+            {/* Row 1: Product / Expense Name */}
+            <div className="form-group">
+              <label className="form-label" htmlFor="expense-name">
+                Product / Expense Name <span className="required">*</span>
+              </label>
+              <input
+                id="expense-name"
+                ref={firstInputRef}
+                type="text"
+                name="name"
+                className={`form-control${errors.name ? ' error' : ''}`}
+                placeholder="e.g. Groceries, Petrol, Rent, Electricity…"
+                value={form.name}
+                onChange={handleChange}
+                autoComplete="off"
+                maxLength={100}
+              />
+              {errors.name && <span className="field-error">{errors.name}</span>}
             </div>
 
             {/* Row 2: Price + Date */}
@@ -346,22 +322,43 @@ export default function ExpenseForm({ onAdd, editingExpense, onEditSave, onEditC
         .form-control.error:focus {
           box-shadow: 0 0 0 3px rgba(220,38,38,0.12);
         }
-        @media (max-width: 500px) {
+        @media (max-width: 560px) {
+          .modal-overlay {
+            align-items: flex-end;
+            padding: 0;
+          }
           .expense-modal {
             max-width: 100%;
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            width: 100%;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             margin: 0 !important;
+            max-height: 88vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
           }
-          .modal-overlay {
-            align-items: flex-end;
+          .expense-modal-header {
+            padding: 16px 18px;
+          }
+          .expense-modal-body {
+            padding: 16px 18px;
+            gap: 12px;
           }
           .modal-form-row {
             grid-template-columns: 1fr;
             gap: 12px;
+          }
+          .expense-modal-footer {
+            padding: 14px 18px;
+            padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+          }
+          .expense-modal-footer .btn {
+            flex: 1;
+            justify-content: center;
+            min-height: 42px;
           }
         }
       `}</style>

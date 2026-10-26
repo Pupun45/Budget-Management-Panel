@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import { formatINR, formatMonthLabel, computeStats } from '../utils/helpers';
 import MonthDetails from './MonthDetails';
 import SummaryCards from './SummaryCards';
+import MonthlyBarGraph from './MonthlyBarGraph';
 
 export default function MonthlyHistory({ allExpenses, allMonthKeys }) {
   const [selectedMonth, setSelectedMonth] = useState(null);
@@ -55,6 +56,13 @@ export default function MonthlyHistory({ allExpenses, allMonthKeys }) {
       <SummaryCards
         stats={historyStats}
         cardKeys={['average', 'highest']}
+      />
+
+      {/* Realtime Bar Graph Visualization */}
+      <MonthlyBarGraph
+        allExpenses={allExpenses}
+        allMonthKeys={allMonthKeys}
+        onSelectMonth={(monthKey) => setSelectedMonth(monthKey)}
       />
 
       <div className="section-title" style={{ marginBottom: 18 }}>

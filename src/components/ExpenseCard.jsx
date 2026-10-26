@@ -1,6 +1,5 @@
 // src/components/ExpenseCard.jsx  (Mobile card view)
 import { formatINR, formatDateDisplay } from '../utils/helpers';
-import CategoryBadge from './CategoryBadge';
 
 export default function ExpenseCard({ expense, onEdit, onDelete }) {
   return (
@@ -14,7 +13,6 @@ export default function ExpenseCard({ expense, onEdit, onDelete }) {
 
       <div className="expense-card-bottom">
         <div className="expense-card-meta">
-          <CategoryBadge category={expense.category} />
           <span className="expense-card-date">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>

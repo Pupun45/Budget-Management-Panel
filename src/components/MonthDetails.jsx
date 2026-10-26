@@ -1,7 +1,6 @@
 // src/components/MonthDetails.jsx
 import { useMemo } from 'react';
 import { formatINR, formatMonthLabel, formatDateDisplay, computeStats } from '../utils/helpers';
-import CategoryBadge from './CategoryBadge';
 
 export default function MonthDetails({ monthKey, expenses, onBack }) {
   const stats = useMemo(() => computeStats(expenses), [expenses]);
@@ -55,7 +54,6 @@ export default function MonthDetails({ monthKey, expenses, onBack }) {
       <section className="expense-table-wrapper" aria-label={`Expenses for ${label}`}>
         <div className="expense-table-header">
           <span className="expense-table-title">All Expenses</span>
-          <span className="expense-count-badge">{expenses.length} {expenses.length === 1 ? 'item' : 'items'}</span>
         </div>
 
         {/* Desktop */}
@@ -65,7 +63,6 @@ export default function MonthDetails({ monthKey, expenses, onBack }) {
               <tr>
                 <th>#</th>
                 <th>Product</th>
-                <th>Category</th>
                 <th className="right">Price</th>
                 <th>Date</th>
               </tr>
@@ -75,7 +72,6 @@ export default function MonthDetails({ monthKey, expenses, onBack }) {
                 <tr key={exp.id}>
                   <td className="text-muted">{idx + 1}</td>
                   <td><div className="product-name">{exp.name}</div></td>
-                  <td><CategoryBadge category={exp.category} /></td>
                   <td className="right price-cell">{formatINR(exp.price)}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>{formatDateDisplay(exp.date)}</td>
                 </tr>
@@ -94,7 +90,6 @@ export default function MonthDetails({ monthKey, expenses, onBack }) {
                   <div className="expense-card-price">{formatINR(exp.price)}</div>
                 </div>
                 <div className="expense-card-meta">
-                  <CategoryBadge category={exp.category} />
                   <span className="expense-card-date">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>

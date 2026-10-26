@@ -41,6 +41,7 @@ export default function App() {
     editExpense,
     deleteExpense,
     allMonthKeys,
+    dbStatus,
   } = useExpenses();
 
   const { toasts, addToast } = useToast();
@@ -98,7 +99,7 @@ export default function App() {
 
   return (
     <div className="app-wrapper">
-      <Header />
+      <Header dbStatus={dbStatus} />
       <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
 
       <div className="main-content" role="main">
