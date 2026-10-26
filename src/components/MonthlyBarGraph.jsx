@@ -244,10 +244,6 @@ export default function MonthlyBarGraph({ allExpenses, allMonthKeys, onSelectMon
         </div>
       )}
 
-      {/* Bottom Hint */}
-      <div className="graph-footer-hint">
-        💡 <strong>Tip:</strong> Click on any month&apos;s bar to inspect its transactions. Real-time updates automatically reflect added expenses.
-      </div>
 
       <style>{`
         .monthly-graph-card {
