@@ -19,35 +19,6 @@ export default function Header({ dbStatus = 'connected' }) {
           </div>
           <div className="header-text">
             <h1>Budget Panel</h1>
-            <p>{formatMonthLabel(getCurrentMonthKey())}</p>
-          </div>
-        </div>
-
-        <div className="header-meta-group">
-          {/* MongoDB Atlas Status Badge */}
-          <div
-            className={`db-status-badge ${dbStatus}`}
-            title={
-              dbStatus === 'connected'
-                ? 'MongoDB Atlas (BudgePlan) Connected & Synced'
-                : dbStatus === 'connecting'
-                ? 'Connecting to MongoDB Atlas...'
-                : 'Offline fallback (local storage active)'
-            }
-          >
-            <span className="db-status-dot" />
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <ellipse cx="12" cy="5" rx="9" ry="3"/>
-              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-            </svg>
-            <span className="db-status-text">
-              {dbStatus === 'connected' ? 'MongoDB Atlas' : dbStatus === 'connecting' ? 'Connecting...' : 'Local Cache'}
-            </span>
-          </div>
-
-          <div className="header-date" role="status" aria-label="Today's date">
-            {dateLabel}
           </div>
         </div>
       </div>
